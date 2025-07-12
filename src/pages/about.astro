@@ -1,4 +1,13 @@
 ---
+const pageTitle = "About Me";
+
+const identity = {
+    name: "Angus Quigley",
+    role: "Web Developer",
+    interests: ["Astro", "Web Development", "Open Source"]
+};
+
+const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
 
 ---
 
@@ -8,7 +17,7 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>{pageTitle}</title>
 	</head>
 	<body>
 
@@ -16,7 +25,11 @@
         <a href="/about">About</a>
         <a href="/newsletter">Newsletter</a>
 
-		<h1>Astro</h1>
+		<h1>{pageTitle}</h1>
         <p>Welcome to my Astro website! Welcome to the about page</p>
+        <p>My skills are:</p>
+        <ul>
+            {skills.map((skill) => <li>{skill}</li>)}
+        </ul>
 	</body>
 </html>
