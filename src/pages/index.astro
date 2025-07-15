@@ -7,63 +7,75 @@ const featuredProject = portfolioPosts[0];
 const latestNewsletter = newsletterPosts[0];
 ---
 <BaseLayout title="Angus Quigley - Personal Portfolio">
-    <section id="hero" class="relative h-screen flex flex-col justify-center items-start bg-white">
-        <canvas id="hero-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
-        <div class="container mx-auto relative z-10"><div class="max-w-5xl mx-auto">
-            <h1 id="hero-text-container" class="font-serif text-5xl md:text-7xl font-bold text-main leading-tight">
-                Building and documenting projects in engineering and aerospace.
-            </h1>
-            <p id="hero-subtitle" class="mt-6 text-lg md:text-xl text-gray-600">
-                A portfolio by Angus Quigley, a Mechatronics Engineer with a newfound interest in aviation.
-            </p>
-        </div></div>
-        <div id="scroll-indicator" class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 z-10">
-            <svg class="w-6 h-6 text-gray-400 animate-bounce" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        </div>
-    </section>
-    <section id="portfolio" class="gsap-anim py-20 md:py-32 bg-section-darker">
-        <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto">
-            <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Featured Project</h2><p class="text-gray-600 text-lg">A selection of my recent work and explorations.</p></div>
-            <div>{featuredProject ? (<div class="bg-white rounded-2xl shadow-lg overflow-hidden"><div class="grid grid-cols-1 md:grid-cols-2"><div class="p-8 md:p-12 order-2 md:order-1 flex flex-col justify-center"><div><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Embedded Systems</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{featuredProject.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{featuredProject.data.description}</p><a href={`/portfolio/${featuredProject.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-accent">View Project Details</a></div></div><div class="order-1 md:order-2"><img src={featuredProject.data.image?.src} alt={featuredProject.data.image?.alt} class="w-full h-full object-cover"></div></div></div>) : <p>No projects yet.</p>}</div>
-            <div class="mt-16 text-left">
-                {/* Button classes updated */}
-                <a href="/portfolio" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Explore Full Portfolio</a>
-            </div>
-        </div></div>
-    </section>
-    <section id="newsletter" class="gsap-anim py-20 md:py-32 bg-white">
-        <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto">
-            <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Newsletter</h2><p class="text-gray-600 text-lg">Occasional thoughts on technology, engineering, and the things I'm building.</p></div>
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"><div class="grid grid-cols-1 md:grid-cols-2">{latestNewsletter ? (<div class="p-8 md:p-12"><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Latest Issue</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{latestNewsletter.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{latestNewsletter.data.description}</p><a href={`/newsletter/${latestNewsletter.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-accent">Read The Article</a></div>) : <div class="p-8 md:p-12"><p>No newsletter issues yet.</p></div>}
-            <div class="bg-section-darker p-8 md:p-12 flex flex-col justify-center">
-                <h4 class="font-serif text-xl font-bold text-main mb-3">Explore the Archive</h4>
-                <p class="text-gray-600 mb-6">Read all past articles and insights.</p>
-                {/* Button classes updated */}
-                <a href="/newsletter" class="text-center bg-gray-800 text-white font-bold py-3 px-6 rounded-full hover:bg-main transition-all w-full shadow-lg hover:shadow-xl">See All Articles</a>
-            </div></div></div>
-        </div></div>
-    </section>
-    <section id="about" class="gsap-anim py-20 md:py-32 bg-section-darker">
-        <div class="container mx-auto px-4"><div class="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-8 items-center max-w-5xl mx-auto">
-            <div class="lg:col-span-2">
-                <h2 class="font-serif text-4xl font-bold text-main mb-4">About Me</h2>
-                <div class="mt-6 text-lg text-gray-600 leading-relaxed space-y-4"><p>At the start of 2025, when I finished my Bachelor of Engineering, I was unsure what industry I wanted to join. During my time at university, I hadn't completed many additional projects or done much self-driven learning.</p><p>After a lot of thinking and exploring different areas of engineering, I've found myself finding aerospace and aviation interesting. My goal is to learn and build some aerospace-related projects which I will be documenting on my website with the skillset I have developed within other industries and throughout my time at university. Keep an eye out on this space for any new updates or portfolio entries. Cheers! Angus</p></div>
-                <div class="mt-8">
-                    {/* Button classes updated */}
-                    <a href="/about" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Find Out More</a>
+    <div class="fade-in-on-load p-4">
+        <section id="hero" class="relative h-[40vh] flex flex-col justify-center items-start bg-white">
+            <canvas id="hero-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
+            <div class="container mx-auto relative z-10">
+                <div class="max-w-5xl mx-auto">
+                    <h1 id="hero-text-container" class="font-serif text-5xl md:text-6xl font-bold text-main leading-tight">
+                        Building and documenting projects in engineering and aerospace.
+                    </h1>
+                    <p id="hero-subtitle" class="mt-6 text-lg md:text-xl text-gray-600">
+                        A portfolio by Angus Quigley, a Mechatronics Engineer focusing on embedded systems and aerospace.
+                    </p>
                 </div>
             </div>
-            <div class="hidden lg:block w-full max-w-xs mx-auto lg:mx-0 lg:justify-self-end"><img src="/profile.png" alt="A photo of Angus Quigley" class="rounded-2xl w-full object-cover shadow-lg border-4 border-white"></div>
-        </div></div>
+            <div id="scroll-indicator" class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 z-10">
+                <svg class="w-6 h-6 text-gray-400 animate-bounce" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </div>
     </section>
-    <section id="contact" class="gsap-anim py-20 md:py-32 bg-white">
-        <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto text-center">
-            <h2 class="font-serif text-4xl font-bold text-main mb-4">Get In Touch</h2>
-            <p class="text-gray-600 mb-8 max-w-xl mx-auto text-lg">I'm always looking for interesting challenges. If you have a project in mind, or just want to connect, feel free to reach out.</p>
-            {/* Button classes updated */}
-            <a href="/contact" class="inline-block bg-gray-800 text-white font-bold py-3 px-8 rounded-full hover:bg-main transition-all text-base shadow-lg hover:shadow-xl">Say Hello</a>
-        </div></div>
-    </section>
+    </div>
+    <div class="fade-in-on-load">
+        <section id="portfolio" class="gsap-anim py-20 md:py-32 bg-section-darker">
+            <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto">
+                <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Featured Project</h2><p class="text-gray-600 text-lg">A selection of my recent work and explorations.</p></div>
+                <div>{featuredProject ? (<div class="bg-white rounded-2xl shadow-lg overflow-hidden"><div class="grid grid-cols-1 md:grid-cols-2"><div class="p-8 md:p-12 order-2 md:order-1 flex flex-col justify-center"><div><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Embedded Systems</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{featuredProject.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{featuredProject.data.description}</p><a href={`/portfolio/${featuredProject.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-accent">View Project Details</a></div></div><div class="order-1 md:order-2"><img src={featuredProject.data.image?.src} alt={featuredProject.data.image?.alt} class="w-full h-full object-cover"></div></div></div>) : <p>No projects yet.</p>}</div>
+                <div class="mt-16 text-left">
+                    {/* Button classes updated */}
+                    <a href="/portfolio" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Explore Full Portfolio</a>
+                </div>
+            </div></div>
+        </section>
+    </div>
+    <div class="fade-in-on-load">
+        <section id="newsletter" class="gsap-anim py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto">
+                <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Newsletter</h2><p class="text-gray-600 text-lg">Occasional thoughts on technology, engineering, and the things I'm building.</p></div>
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"><div class="grid grid-cols-1 md:grid-cols-2">{latestNewsletter ? (<div class="p-8 md:p-12"><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Latest Issue</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{latestNewsletter.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{latestNewsletter.data.description}</p><a href={`/newsletter/${latestNewsletter.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-accent">Read The Article</a></div>) : <div class="p-8 md:p-12"><p>No newsletter issues yet.</p></div>}
+                <div class="bg-section-darker p-8 md:p-12 flex flex-col justify-center">
+                    <h4 class="font-serif text-xl font-bold text-main mb-3">Explore the Archive</h4>
+                    <p class="text-gray-600 mb-6">Read all past articles and insights.</p>
+                    {/* Button classes updated */}
+                    <a href="/newsletter" class="text-center bg-gray-800 text-white font-bold py-3 px-6 rounded-full hover:bg-main transition-all w-full shadow-lg hover:shadow-xl">See All Articles</a>
+                </div></div></div>
+            </div></div>
+        </section>
+    </div>
+    <div class="fade-in-on-load">
+        <section id="about" class="gsap-anim py-20 md:py-32 bg-section-darker">
+            <div class="container mx-auto px-4"><div class="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-8 items-center max-w-5xl mx-auto">
+                <div class="lg:col-span-2">
+                    <h2 class="font-serif text-4xl font-bold text-main mb-4">About Me</h2>
+                    <div class="mt-6 text-lg text-gray-600 leading-relaxed space-y-4"><p>At the start of 2025, when I finished my Bachelor of Engineering, I was unsure what industry I wanted to join. During my time at university, I hadn't completed many additional projects or done much self-driven learning.</p><p>After a lot of thinking and exploring different areas of engineering, I've found myself finding aerospace and aviation interesting. My goal is to learn and build some aerospace-related projects which I will be documenting on my website with the skillset I have developed within other industries and throughout my time at university. Keep an eye out on this space for any new updates or portfolio entries. Cheers! Angus</p></div>
+                    <div class="mt-8">
+                        {/* Button classes updated */}
+                        <a href="/about" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Find Out More</a>
+                    </div>
+                </div>
+                <div class="hidden lg:block w-full max-w-xs mx-auto lg:mx-0 lg:justify-self-end"><img src="/profile.png" alt="A photo of Angus Quigley" class="rounded-2xl w-full object-cover shadow-lg border-4 border-white"></div>
+            </div></div>
+        </section>
+    </div>
+    <div class="fade-in-on-load">
+        <section id="contact" class="gsap-anim py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-4">
+                {/* The 'text-center' and 'mx-auto' classes have been removed to left-align this section */}
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="font-serif text-4xl font-bold text-main mb-4">Get In Touch</h2>
+                    <p class="text-gray-600 mb-8 max-w-xl text-lg">I'm always looking for interesting challenges. If you have a project in mind, or just want to connect, feel free to reach out.</p>
+                    <a href="/contact" class="inline-block bg-gray-800 text-white font-bold py-3 px-8 rounded-full hover:bg-main transition-all text-base shadow-lg hover:shadow-xl">Say Hello</a>
+                </div>
+            </div>
+        </section>
+    </div>
 </BaseLayout>
-
-<script src="../scripts/animations.js"></script>

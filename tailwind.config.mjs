@@ -22,6 +22,11 @@ export default {
                         'h1, h2, h3, h4, h5, h6': {
                             fontFamily: theme('fontFamily.serif'),
                         },
+                        // This new rule styles all images inside your markdown content
+                        'img': {
+                            borderRadius: theme('borderRadius.xl'),
+                            boxShadow: theme('boxShadow.md'),
+                        },
                     },
                 },
             }),

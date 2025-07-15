@@ -1,9 +1,9 @@
 ---
-// src/pages/portfolio/[...slug].astro
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 
+// This function is required by Astro to generate a page for each project
 export async function getStaticPaths() {
   const portfolioEntries = await getCollection('portfolio');
   return portfolioEntries.map(entry => ({
@@ -18,19 +18,20 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
 <BaseLayout title={`${entry.data.title} - Angus Quigley`}>
-  <PageHeader title={entry.data.title} />
-
-  <article class="content-fade-in py-12 md:py-20 bg-white">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto">
-        <div class="prose lg:prose-xl prose-h2:font-serif prose-h2:text-main prose-a:text-accent-red hover:prose-a:text-hover-accent-red">
+  <PageHeader title={entry.data.title} subtitle={entry.data.description} />
+  <div class="fade-in-on-load">
+    <article class="gsap-anim py-12 md:py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+          {/* The 'prose' class styles your markdown content beautifully */}
+          <div class="prose lg:prose-xl prose-headings:font-serif prose-headings:text-main prose-a:text-accent hover:prose-a:text-hover-accent">
             <Content />
-        </div>
-        {/* Back button added */}
-        <div class="mt-12 pt-8 border-t border-gray-200">
-            <a href="/portfolio" class="text-main font-bold link-underline hover:text-accent-red">← Back to Portfolio</a>
+          </div>
+          <div class="mt-12 pt-8 border-t border-gray-200">
+            <a href="/portfolio" class="text-main font-bold link-underline hover:text-accent">← Back to Portfolio</a>
+          </div>
         </div>
       </div>
-    </div>
-  </article>
+    </article>
+  </div>
 </BaseLayout>

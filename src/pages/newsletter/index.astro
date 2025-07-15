@@ -1,33 +1,25 @@
 ---
-// src/pages/newsletter/index.astro
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
-
-const newsletterEntries = await getCollection('newsletter');
-const sortedEntries = newsletterEntries.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const newsletterEntries = (await getCollection('newsletter')).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 ---
 <BaseLayout title="Newsletter - Angus Quigley">
-  <PageHeader 
-    title="Newsletter" 
-    subtitle="Occasional thoughts on technology, engineering, and the things I'm building."
-  />
+  <PageHeader title="Newsletter" subtitle="Occasional thoughts on technology, engineering, and the things I'm building." />
   <div class="bg-white py-12 md:py-20">
     <div class="container mx-auto px-4 max-w-3xl">
-      {/* This container will trigger the animation for the list below */}
-      <div class="newsletter-list-container">
-        <ul class="space-y-12">
-          {sortedEntries.map(entry => (
-            <li class="newsletter-content">
-              <a href={`/newsletter/${entry.slug}`} class="block group">
-                <p class="text-sm font-semibold text-gray-500">{entry.data.publishDate.toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <h3 class="font-serif text-3xl font-bold text-main mt-1 group-hover:text-accent-red transition-colors">{entry.data.title}</h3>
-                <p class="mt-2 text-gray-600 leading-relaxed">{entry.data.description}</p>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul class="space-y-12">
+        {newsletterEntries.map(entry => (
+          // The 'stagger-item' class is added to each list item
+          <li class="stagger-item">
+            <a href={`/newsletter/${entry.slug}`} class="block group">
+              <p class="text-sm font-semibold text-gray-500">{entry.data.publishDate.toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              <h3 class="font-serif text-3xl font-bold text-main mt-1 group-hover:text-accent">{entry.data.title}</h3>
+              <p class="mt-2 text-gray-600 leading-relaxed">{entry.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </div>
 </BaseLayout>

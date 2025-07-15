@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+  Add these new styles for the fade-in animations
+*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-on-scroll {
+  animation: fadeIn 1s ease-out forwards;
+  /* By default, the element is hidden */
+  opacity: 0; 
+  /* We'll use this with JavaScript to trigger the animation */
+  animation-play-state: paused; 
+}
+
+/* This class will be added by JS to start the animation */
+.fade-in-on-scroll.is-visible {
+  animation-play-state: running;
+}
