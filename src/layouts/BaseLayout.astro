@@ -1,0 +1,34 @@
+---
+// src/layouts/BaseLayout.astro
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+const { title } = Astro.props;
+---
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style is:global>
+        @import '../styles/global.css';
+        body { background-color: #ffffff; color: #292826; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .link-underline { position: relative; text-decoration: none; transition: color 0.25s ease-out; }
+        .link-underline::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: #d02224; transform-origin: bottom right; transition: transform 0.25s ease-out; }
+        .link-underline:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+    </style>
+</head>
+{/* The padding class is removed from the body */}
+<body class="antialiased">
+    <Header />
+    {/* The padding class is correctly placed on the main element */}
+    <main class="pt-16">
+        <slot />
+    </main>
+    <Footer />
+    <script src="../scripts/animations.js"></script>
+</body>
+</html>

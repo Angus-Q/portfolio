@@ -1,0 +1,15 @@
+---
+// src/components/PortfolioCard.astro
+const { entry } = Astro.props;
+---
+<a href={`/portfolio/${entry.slug}`} class="block group bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1">
+  <img src={entry.data.image?.src} alt={entry.data.image?.alt} class="w-full h-64 object-cover" />
+  <div class="p-8">
+    <p class="text-sm font-semibold text-gray-500">{entry.data.publishDate.toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    <h3 class="font-serif text-2xl font-bold text-main mt-2 group-hover:text-accent-red transition-colors">{entry.data.title}</h3>
+    <p class="mt-4 text-gray-600 leading-relaxed line-clamp-2">{entry.data.description}</p>
+    <div class="inline-block mt-6 font-bold text-main">
+      <span class="link-underline">Read Case Study</span>
+    </div>
+  </div>
+</a>

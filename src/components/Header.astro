@@ -1,0 +1,17 @@
+---
+// src/components/Header.astro
+---
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
+    <div class="container mx-auto px-4">
+        <nav class="flex justify-between items-center py-4">
+            {/* The hover:text-accent-red class is added */}
+            <a href="/" class="font-serif text-2xl font-bold text-main transition-colors hover:text-accent-red">angusq</a>
+            <div class="flex items-center space-x-6 text-sm font-medium text-gray-700">
+                <a href="/portfolio" class="link-underline hover:text-accent-red">Portfolio</a>
+                <a href="/newsletter" class="link-underline hover:text-accent-red">Newsletter</a>
+                <a href="/about" class="link-underline hover:text-accent-red">About</a>
+                <a href="/contact" class="link-underline hover:text-accent-red">Contact</a>
+            </div>
+        </nav>
+    </div>
+</header>
