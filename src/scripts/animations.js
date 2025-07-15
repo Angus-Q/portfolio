@@ -4,6 +4,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 function initAllAnimations() {
+    // This removes the loading class, revealing the content now that GSAP is ready
+    document.documentElement.classList.remove('js-loading');
+
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
     const heroCanvas = document.getElementById('hero-canvas');
@@ -11,8 +14,8 @@ function initAllAnimations() {
         const ctx = heroCanvas.getContext('2d');
         if (!ctx) return;
         let particles = [];
-        const particleColor = 'rgba(208, 34, 36, 0.2)';
-        const lineColor = 'rgba(208, 34, 36, 0.05)';
+        const particleColor = 'rgba(17, 24, 39, 0.2)'; // Updated to gray
+        const lineColor = 'rgba(17, 24, 39, 0.05)'; // Updated to gray
         const resizeCanvas = () => { heroCanvas.width = window.innerWidth; heroCanvas.height = window.innerHeight; createParticles(); };
         const createParticles = () => {
             particles = [];
@@ -42,27 +45,9 @@ function initAllAnimations() {
         gsap.from("#hero-subtitle", { duration: 1, opacity: 0, y: 20, delay: 0.4, ease: "power3.out" });
         gsap.to("#scroll-indicator", { duration: 1, opacity: 1, delay: 1.5, ease: "power3.out" });
     }
-
-    // --- Staggered Animation for Portfolio Items ---
-    const portfolioItems = gsap.utils.toArray('.portfolio-item');
-    if (portfolioItems.length > 0) {
-        gsap.from(portfolioItems, {
-            duration: 0.8,
-            opacity: 0,
-            y: 50,
-            ease: "power3.out",
-            stagger: 0.2,
-            scrollTrigger: {
-                trigger: ".portfolio-grid-container",
-                start: "top 80%",
-                toggleActions: "play none none reverse",
-            }
-        });
-    }
-
-    // --- General Scroll Animations for other elements ---
-    const otherAnimatedElements = gsap.utils.toArray('.newsletter-content, .about-content, .contact-content, .footer-anim, .content-fade-in');
-    otherAnimatedElements.forEach((elem) => {
+    
+    const animatedElements = gsap.utils.toArray('.gsap-anim');
+    animatedElements.forEach((elem) => {
         gsap.from(elem, {
             duration: 1,
             opacity: 0,
