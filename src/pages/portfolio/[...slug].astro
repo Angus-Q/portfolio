@@ -1,20 +1,26 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+// src/pages/portfolio/[...slug].astro
+
+// 1. Import getEntry instead of getCollection
+import { getEntry, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 
-// This function is required by Astro to generate a page for each project
-export async function getStaticPaths() {
-  const portfolioEntries = await getCollection('portfolio');
-  return portfolioEntries.map(entry => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+// 2. getStaticPaths is REMOVED. This section replaces it.
+// We get the 'slug' from the URL parameters provided by the server.
+if (!Astro.params.slug) {
+  return new Response('Not Found', { status: 404 });
 }
 
-type Props = { entry: CollectionEntry<'portfolio'>; }
+// Fetch the specific portfolio entry using the slug from the URL.
+const entry = await getEntry('portfolio', Astro.params.slug);
 
-const { entry } = Astro.props;
+// 3. Add a check in case a user requests a project that doesn't exist.
+if (entry === undefined) {
+  return Astro.redirect('/404');
+}
+
+// 4. The rest of the code now works because 'entry' is correctly defined.
 const { Content } = await entry.render();
 ---
 <BaseLayout title={`${entry.data.title} - Angus Quigley`}>
@@ -23,7 +29,6 @@ const { Content } = await entry.render();
     <article class="gsap-anim py-12 md:py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto">
-          {/* The 'prose' class styles your markdown content beautifully */}
           <div class="prose lg:prose-xl prose-headings:font-serif prose-headings:text-main prose-a:text-accent hover:prose-a:text-hover-accent">
             <Content />
           </div>

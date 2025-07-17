@@ -1,20 +1,29 @@
 ---
 // src/pages/newsletter/[...slug].astro
-import { getCollection, type CollectionEntry } from 'astro:content';
+
+import { getEntry, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
+import ViewCounter from '../../components/ViewCounter.astro';
 
-export async function getStaticPaths() {
-  const newsletterEntries = await getCollection('newsletter');
-  return newsletterEntries.map(entry => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+// We can define a type alias for cleaner code
+type NewsletterEntry = CollectionEntry<'newsletter'>;
+
+// By checking Astro.params.slug directly and returning early, we prove to
+// TypeScript that 'slug' must be a string in all code that follows.
+if (!Astro.params.slug) {
+  return new Response('Not Found', { status: 404 });
 }
 
-type Props = { entry: CollectionEntry<'newsletter'>; }
+// Now we can safely use Astro.params.slug, knowing it's a string.
+const entry: NewsletterEntry | undefined = await getEntry('newsletter', Astro.params.slug);
 
-const { entry } = Astro.props;
+// This check proves to TypeScript that 'entry' cannot be undefined
+// in any code that follows, resolving the 'render' error.
+if (entry === undefined) {
+  return Astro.redirect('/404');
+}
+
 const { Content } = await entry.render();
 ---
 <BaseLayout title={`${entry.data.title} - Angus Quigley`}>
@@ -26,10 +35,12 @@ const { Content } = await entry.render();
           <div class="prose lg:prose-xl prose-h2:font-serif prose-h2:text-main prose-a:text-accent-red hover:prose-a:text-hover-accent-red">
               <Content />
           </div>
-          {/* Back button added */}
-          <div class="mt-12 pt-8 border-t border-gray-200">
+
+          <div class="mt-12 pt-8 border-t border-gray-200 flex justify-between items-center">
               <a href="/newsletter" class="text-main font-bold link-underline hover:text-accent-red">← Back to Newsletter</a>
+              <ViewCounter slug={entry.slug} />
           </div>
+
         </div>
       </div>
     </article>

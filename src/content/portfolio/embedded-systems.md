@@ -1,7 +1,7 @@
 ---
 title: Embedded System Engineering
 description: From prototyping to concept development and final production, I've worked on projects that embrace hardware and software components.
-publishDate: 2025-07-15
+publishDate: 2025-07-16
 image:
     src: /images/es1.jpg
     alt: 'A placeholder image for the project'
