@@ -7,8 +7,16 @@ const featuredProject = portfolioPosts[0];
 const latestNewsletter = newsletterPosts[0];
 ---
 <BaseLayout title="Angus Quigley - Personal Portfolio">
-    <div class="fade-in-on-load p-4">
-        <section id="hero" class="relative h-[40vh] flex flex-col justify-center items-start bg-white">
+    {/* - FIX 1: Added responsive top padding to push content below the fixed header.
+      - pt-32: Padding for mobile (header is taller).
+      - md:pt-24: Padding for desktop (header is shorter).
+      - The existing `p-4` is kept for horizontal and bottom padding.
+    */}
+    <div class="fade-in-on-load p-4 pt-32 md:pt-24">
+        {/* - FIX 2: Changed fixed height `h-[40vh]` to minimum height `min-h-[40vh]`.
+          - This allows the section to expand vertically if the text wraps on small screens, preventing it from being cut off.
+        */}
+        <section id="hero" class="relative min-h-[40vh] flex flex-col justify-center items-start bg-white">
             <canvas id="hero-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
             <div class="container mx-auto relative z-10">
                 <div class="max-w-5xl mx-auto">
@@ -31,7 +39,6 @@ const latestNewsletter = newsletterPosts[0];
                 <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Featured Project</h2><p class="text-gray-600 text-lg">A selection of my recent work and explorations.</p></div>
                 <div>{featuredProject ? (<div class="bg-white rounded-2xl shadow-lg overflow-hidden"><div class="grid grid-cols-1 md:grid-cols-2"><div class="p-8 md:p-12 order-2 md:order-1 flex flex-col justify-center"><div><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Embedded Systems</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{featuredProject.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{featuredProject.data.description}</p><a href={`/portfolio/${featuredProject.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-accent">View Project Details</a></div></div><div class="order-1 md:order-2"><img src={featuredProject.data.image?.src} alt={featuredProject.data.image?.alt} class="w-full h-full object-cover"></div></div></div>) : <p>No projects yet.</p>}</div>
                 <div class="mt-16 text-left">
-                    {/* Button classes updated */}
                     <a href="/portfolio" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Explore Full Portfolio</a>
                 </div>
             </div></div>
@@ -45,7 +52,6 @@ const latestNewsletter = newsletterPosts[0];
                 <div class="bg-section-darker p-8 md:p-12 flex flex-col justify-center">
                     <h4 class="font-serif text-xl font-bold text-main mb-3">Explore the Archive</h4>
                     <p class="text-gray-600 mb-6">Read all past articles and insights.</p>
-                    {/* Button classes updated */}
                     <a href="/newsletter" class="text-center bg-gray-800 text-white font-bold py-3 px-6 rounded-full hover:bg-main transition-all w-full shadow-lg hover:shadow-xl">See All Articles</a>
                 </div></div></div>
             </div></div>
@@ -58,7 +64,6 @@ const latestNewsletter = newsletterPosts[0];
                     <h2 class="font-serif text-4xl font-bold text-main mb-4">About Me</h2>
                     <div class="mt-6 text-lg text-gray-600 leading-relaxed space-y-4"><p>At the start of 2025, when I finished my Bachelor of Engineering, I was unsure what industry I wanted to join. During my time at university, I hadn't completed many additional projects or done much self-driven learning.</p><p>After a lot of thinking and exploring different areas of engineering, I've found myself finding aerospace and aviation interesting. My goal is to learn and build some aerospace-related projects which I will be documenting on my website with the skillset I have developed within other industries and throughout my time at university. Keep an eye out on this space for any new updates or portfolio entries. Cheers! Angus</p></div>
                     <div class="mt-8">
-                        {/* Button classes updated */}
                         <a href="/about" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Find Out More</a>
                     </div>
                 </div>
@@ -69,7 +74,6 @@ const latestNewsletter = newsletterPosts[0];
     <div class="fade-in-on-load">
         <section id="contact" class="gsap-anim py-20 md:py-32 bg-white">
             <div class="container mx-auto px-4">
-                {/* The 'text-center' and 'mx-auto' classes have been removed to left-align this section */}
                 <div class="max-w-5xl mx-auto">
                     <h2 class="font-serif text-4xl font-bold text-main mb-4">Get In Touch</h2>
                     <p class="text-gray-600 mb-8 max-w-xl text-lg">I'm always looking for interesting challenges. If you have a project in mind, or just want to connect, feel free to reach out.</p>

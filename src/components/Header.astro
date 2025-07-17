@@ -3,10 +3,19 @@
 ---
 <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
     <div class="container mx-auto px-4">
-        <nav class="flex justify-between items-center py-4">
-            {/* The hover:text-accent-red class is added */}
+        {/* - flex-col: Stacks items vertically on mobile.
+          - md:flex-row: Switches to a horizontal layout on medium screens and up.
+          - items-center: Centers items horizontally in the flex-col layout.
+          - gap-4: Adds spacing between the logo and the nav links on mobile.
+        */}
+        <nav class="flex flex-col md:flex-row justify-between items-center py-4 gap-4 md:gap-0">
             <a href="/" class="font-serif text-2xl font-bold text-main transition-colors hover:text-accent-red">angusq</a>
-            <div class="flex items-center space-x-6 text-sm font-medium text-gray-700">
+            
+            {/* - flex-wrap: Allows nav links to wrap onto the next line if needed on small screens.
+              - justify-center: Keeps the links centered.
+              - gap-x-6 and gap-y-2: Responsive spacing for the links.
+            */}
+            <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-sm font-medium text-gray-700">
                 <a href="/portfolio" class="link-underline hover:text-accent-red">Portfolio</a>
                 <a href="/newsletter" class="link-underline hover:text-accent-red">Newsletter</a>
                 <a href="/about" class="link-underline hover:text-accent-red">About</a>
