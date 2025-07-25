@@ -1,3 +1,3 @@
 # angusq.com personal portfolio!
 
-Have a great day! 
+Have a great day!
