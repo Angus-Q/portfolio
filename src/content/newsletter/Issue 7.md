@@ -1,7 +1,7 @@
 ---
 title: Issue 07 - A Little Curious
 description: Bagels at Little Curious, and a trip back up north to see friends and family!
-publishDate: 2025-08-1
+publishDate: 2025-08-01
 ---
 
 ### A Little Curious
