@@ -1,5 +1,5 @@
 ---
-title: Issue 08 - Ocean Views
+title: Issue 08 - Harbour Views
 description: Wonderful views at Akaora, with a nice meal by the waterfront and a hike through the forest.
 publishDate: 2025-08-08
 ---
