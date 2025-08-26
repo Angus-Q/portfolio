@@ -1,6 +1,6 @@
 ---
-title: Issue 010 - Going flying again!
-description: description: Continuing my hour building in the Piper Warrior II.
+title: Issue 10 - Going flying again!
+description: Continuing my hour building in the Piper Warrior II.
 publishDate: 2025-08-22
 ---
 
@@ -13,7 +13,7 @@ This was my first week back flying after a month. I enjoyed the flight a lot, bu
 Keep flying! 
 
 
-**![Logbook](/images/plane-1.jpeg)**
+**![Plane1](/images/plane-1.jpeg)**
 
 ### Song of the Week!
 
