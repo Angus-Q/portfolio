@@ -16,7 +16,7 @@ In addition to this, my PCBs arrived this week from JLCPCB in China. This was my
 
 **![PCB1](/images/PCB2.png)**
 
-### Growing your online image
+### Starting a small business!
 Over the last few weeks, I've been putting energy into polishing my website design and development process. Building websites is something I have experience with, including experience with front and backend development. This is something I want to pursue part-time to financially help with my studies and flying. Without a strong client base, I'm looking to build sites at cost for new customers. In time, this would cost me anywhere between $500 and $3,000, depending on the site and scope of the client and their goals for their online site. However, after I do this for about 5 clients, I will start looking at how I can promote and charge out my services, as I'll have a foundational client base I hope can provide good testimonials to my work.
 
 ### Song of the Week!
