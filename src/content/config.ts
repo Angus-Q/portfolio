@@ -19,6 +19,10 @@ const newsletterCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     publishDate: z.date(),
+    image: z.object({
+        src: z.string(),
+        alt: z.string(),
+    }).optional(),
   }),
 });
 

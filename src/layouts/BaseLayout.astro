@@ -19,8 +19,12 @@ const { title } = Astro.props;
         html { background-color: #ffffff; }
         body { background-color: #ffffff; color: #111827; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .link-underline { position: relative; text-decoration: none; transition: color 0.25s ease-out; }
-        .link-underline::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: #111827; transform-origin: bottom right; transition: transform 0.25s ease-out; }
+        .link-underline::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: #1d1e22; transform-origin: bottom right; transition: transform 0.25s ease-out; }
         .link-underline:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+
+        .link-underline-white { position: relative; text-decoration: none; transition: color 0.25s ease-out; }
+        .link-underline-white::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: white; transform-origin: bottom right; transition: transform 0.25s ease-out; }
+        .link-underline-white:hover::after { transform: scaleX(1); transform-origin: bottom left; }
 
         /* General fade-in for single content blocks */
         .fade-in-on-load {
@@ -56,7 +60,7 @@ const { title } = Astro.props;
 </head>
 <body class="antialiased">
     <Header />
-    <main class="pt-16">
+    <main>
         <slot />
     </main>
     <Footer />

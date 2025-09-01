@@ -6,9 +6,10 @@ export default {
     theme: {
         extend: {
             colors: {
-                'main': '#111827',
-                'accent': '#6b7280',
-                'hover-accent': '#4b5563',
+                'main': '#1d1e22',
+                'accent': '#1d1e22',
+                'accent-red': '#1d1e22',
+                'hover-accent': '#2d2e32',
                 'section-darker': '#f9fafb',
             },
             fontFamily: {
