@@ -1,27 +1,123 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHeader from '../../components/PageHeader.astro';
-const portfolioEntries = (await getCollection('portfolio')).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+import { getCollection } from 'astro:content';
+const portfolio = await getCollection('portfolio');
+
+// Separate projects from video tutorials
+const projects = portfolio.filter(item => !item.data.link?.includes('youtube.com'));
+const videos = portfolio.filter(item => item.data.link?.includes('youtube.com'));
+
+// Function to extract YouTube video ID and generate thumbnail URL
+function getYouTubeThumbnail(url: string | undefined): string | null {
+  if (!url || !url.includes('youtube.com')) return null;
+  
+  const videoIdMatch = url.match(/[?&]v=([^&]+)/);
+  if (videoIdMatch && videoIdMatch[1]) {
+    const videoId = videoIdMatch[1];
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  }
+  return null;
+}
 ---
-<BaseLayout title="Portfolio - Angus Quigley">
-  <PageHeader title="Portfolio" subtitle="A selection of my recent work and explorations." />
-  <div class="bg-white py-12 md:py-20">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {portfolioEntries.map(entry => (
-            // The 'stagger-item' class is added to each link
-            <a href={`/portfolio/${entry.slug}`} class="stagger-item block group bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1">
-              <img src={entry.data.image?.src} alt={entry.data.image?.alt} class="w-full h-64 object-cover" />
-              <div class="p-8">
-                <p class="text-sm font-semibold text-gray-500">{entry.data.publishDate.toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <h3 class="font-serif text-2xl font-bold text-main mt-2 group-hover:text-accent">{entry.data.title}</h3>
-                <p class="mt-4 text-gray-600 leading-relaxed line-clamp-2">{entry.data.description}</p>
-                <div class="inline-block mt-6 font-bold text-main"><span class="link-underline">Read Case Study</span></div>
+<BaseLayout title="Angus Quigley | Portfolio" description="collection of projects and work">
+  <section class="py-16 fade-in">
+    <h1 class="text-5xl font-display font-light mb-12 relative">
+      portfolio
+    </h1>
+    
+    <!-- Projects Section -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-display font-light mb-8 text-gray-700">Projects</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in-up" style="animation-delay: 0.4s;">
+        {projects.map((project, index) => (
+          <article class="group cursor-pointer fade-in-left h-full" style={`animation-delay: ${0.6 + index * 0.2}s;`}>
+            <a href={`/portfolio/${project.slug}`} class="block h-full">
+              <div class="bg-white border border-gray-200 overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:border-gray-300 h-full flex flex-col">
+                {project.data.image?.src ? (
+                  <div class="aspect-video overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img 
+                      src={project.data.image.src} 
+                      alt={project.data.image.alt || project.data.title}
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div class="aspect-video bg-gray-200 flex items-center justify-center flex-shrink-0">
+                    <div class="text-gray-400 text-sm font-display">No Image Available</div>
+                  </div>
+                )}
+                
+                <div class="p-6 flex flex-col flex-grow">
+                  <div class="mb-3">
+                    <h3 class="text-xl font-display font-light group-hover:text-gray-600 transition-colors duration-300">
+                      {project.data.title}
+                    </h3>
+                  </div>
+                  
+                  {project.data.description && (
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
+                      {project.data.description}
+                    </p>
+                  )}
+                  
+                  <div class="flex items-center text-xs text-gray-500 group-hover:text-gray-700 transition-colors duration-300 mt-auto">
+                    <span class="clean-underline">view project</span>
+                    <span class="ml-2">→</span>
+                  </div>
+                </div>
               </div>
             </a>
+          </article>
         ))}
       </div>
     </div>
-  </div>
+
+    <!-- Video Tutorials Section -->
+    <div>
+      <h2 class="text-2xl font-display font-light mb-8 text-gray-700">Video Tutorials</h2>
+      <div class="space-y-6 fade-in-up" style="animation-delay: 0.8s;">
+        {videos.map((video, index) => {
+          const thumbnailUrl = getYouTubeThumbnail(video.data.link);
+          return (
+            <article class="group border-b border-gray-200 pb-6 last:border-b-0 fade-in-left" style={`animation-delay: ${1.0 + index * 0.1}s;`}>
+              <a href={video.data.link} target="_blank" rel="noopener noreferrer" class="block">
+                <div class="flex flex-col md:flex-row gap-6">
+                  {thumbnailUrl && (
+                    <div class="md:w-48 flex-shrink-0">
+                      <div class="aspect-video overflow-hidden bg-gray-100 rounded">
+                        <img 
+                          src={thumbnailUrl} 
+                          alt={`${video.data.title} - YouTube Tutorial`}
+                          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div class="flex-grow">
+                    <h3 class="text-xl font-display font-light group-hover:text-gray-600 transition-colors duration-300 mb-3">
+                      {video.data.title}
+                    </h3>
+                    
+                    {video.data.description && (
+                      <p class="text-gray-600 leading-relaxed mb-4">
+                        {video.data.description}
+                      </p>
+                    )}
+                    
+                    <div class="flex items-center text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                      <span class="clean-underline">watch on youtube</span>
+                      <span class="ml-2">↗</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
 </BaseLayout>

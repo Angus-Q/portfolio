@@ -1,26 +1,56 @@
 ---
-// src/pages/about.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
 ---
-<BaseLayout title="About - Angus Quigley">
-  <PageHeader title="About Me" subtitle="Learn more about my background, interests, and what drives my passion for engineering and aerospace." />
-  <div class="fade-in-on-load">
-    <section class="py-20 md:py-24 bg-white about-content">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center max-w-5xl mx-auto">
-          <div class="lg:col-span-2">
-            {/* Blurb updated here */}
-            <p class="text-lg text-gray-600 leading-relaxed space-y-6">
-              <span>At the start of 2025, when I finished my Bachelor of Engineering, I was unsure what industry I wanted to join. During my time at university, I hadn't completed many additional projects or done much self-driven learning.</span>
-              <span>After a lot of thinking and exploring different areas of engineering, I've found myself finding aerospace and aviation interesting. My goal is to learn and build some aerospace-related projects which I will be documenting on my website with the skillset I have developed within other industries and throughout my time at university. Keep an eye out on this space for any new updates or portfolio entries. Cheers! Angus</span>
-            </p>
+<BaseLayout title="Angus Quigley | About" description="learn more about angus">
+  <section class="py-16 fade-in">
+    <h1 class="text-5xl font-display font-light mb-12 relative">
+      about
+    </h1>
+    
+    <div class="max-w-2xl space-y-8 text-lg leading-relaxed">
+      <p class="fade-in-up" style="animation-delay: 0.4s;">
+        I'm a mechatronics engineer passionate about creating innovative solutions to mechanical, electrical, and software challenges.
+      </p>
+      
+      <p class="fade-in-up" style="animation-delay: 0.8s;">
+        My areas of interest are electrical and embedded systems, firmware, and software solutions. I also enjoy product development and mechanical-electrical systems where both aspects of engineering are utilized.
+      </p>
+      
+      <p class="fade-in-up" style="animation-delay: 1.2s;">
+        In my spare time, I enjoy tramping, running, and flying. I'm currently training to get my private pilot's license and have done close to 15 hours now.
+      </p>
+      
+      <div class="pt-8 fade-in-up" style="animation-delay: 1.6s;">
+        <h2 class="text-5xl font-display font-light mb-12">
+          skills
+        </h2>
+        <div class="space-y-4 text-lg">
+          <div class="pb-4 border-b border-gray-200">
+            <h3 class="font-medium">programming languages</h3>
+            <p class="text-gray-600 mt-1">C/C++, Qt, iOS, Swift, Python, Javascript, SQL</p>
           </div>
-          <div class="w-full max-w-xs mx-auto lg:mx-0 lg:justify-self-end">
-            <img src="/profile.png" alt="A photo of Angus Quigley" class="rounded-2xl w-full object-cover shadow-lg border-4 border-white">
+          <div class="pb-4 border-b border-gray-200">
+            <h3 class="font-medium">design software</h3>
+            <p class="text-gray-600 mt-1">SolidWorks, Altium Designer, KiCad</p>
+          </div>
+          <div class="pb-4 border-b border-gray-200">
+            <h3 class="font-medium">embedded systems</h3>
+            <p class="text-gray-600 mt-1">microcontroller programming, real-time systems, and hardware interfacing</p>
+          </div>
+          <div class="pb-4 border-b border-gray-200">
+            <h3 class="font-medium">electrical design</h3>
+            <p class="text-gray-600 mt-1">PCB design, circuit analysis, and signal integrity</p>
+          </div>
+          <div class="pb-4 border-b border-gray-200">
+            <h3 class="font-medium">mechanical design</h3>
+            <p class="text-gray-600 mt-1">3D modeling, simulation, and manufacturing-ready development</p>
+          </div>
+          <div class="pb-4 border-b border-gray-200">
+            <h3 class="font-medium">product development</h3>
+            <p class="text-gray-600 mt-1">prototyping, testing methodologies, and system integration</p>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </BaseLayout>

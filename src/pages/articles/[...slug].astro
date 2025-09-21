@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('articles');
+  return posts.map((post) => ({
+    params: { slug: post.slug }
+  }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry('articles', slug!);
+if (!entry) throw new Error('Article not found');
+
+const rendered = await entry.render();
+const { Content } = rendered;
+const data = entry.data;
+---
+<BaseLayout title={`${data.title} | Angus Quigley`} description={data.description ?? ''}>
+  <article class="py-16 fade-in">
+    <header class="mb-12 pb-8 border-b border-gray-200">
+      <p class="text-sm text-gray-500 mb-4">
+        {new Date(data.pubDate || data.publishDate).toLocaleDateString('en-US', { 
+          month: 'long', 
+          day: 'numeric',
+          year: 'numeric'
+        })}
+      </p>
+      <h1 class="text-4xl font-display font-light leading-tight mb-4 relative">
+        {data.title}
+      </h1>
+      {data.description && (
+        <p class="text-lg text-gray-600 leading-relaxed">
+          {data.description}
+        </p>
+      )}
+    </header>
+    
+    <div class="prose prose-lg max-w-none fade-in-up" style="animation-delay: 0.6s;">
+      <Content />
+    </div>
+    
+    <footer class="mt-16 pt-8 border-t border-gray-200 fade-in-up" style="animation-delay: 1.0s;">
+      <nav class="flex justify-between items-center text-sm">
+        <a href="/articles" class="clean-underline text-gray-600 hover:text-gray-900">
+          ← back to articles
+        </a>
+        <a href="/contact" class="clean-underline text-gray-600 hover:text-gray-900">
+          discuss this article →
+        </a>
+      </nav>
+    </footer>
+  </article>
+</BaseLayout>

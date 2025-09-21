@@ -1,0 +1,473 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allArticles = await getCollection('articles');
+
+// Group articles by category and subcategory
+const groupedArticles = allArticles.reduce((acc, article) => {
+  let category = article.data.category || 'Uncategorized';
+  
+  // Rename "Weekly Progress Updates" to "Weekly News"
+  if (category === 'Weekly Progress Updates') {
+    category = 'Weekly News';
+  }
+  
+  const subcategory = article.data.subcategory || 'General';
+  
+  if (!acc[category]) {
+    acc[category] = {};
+  }
+  if (!acc[category][subcategory]) {
+    acc[category][subcategory] = [];
+  }
+  acc[category][subcategory].push(article);
+  
+  return acc;
+}, {} as Record<string, Record<string, typeof allArticles>>);
+
+// Sort articles within each group by date
+Object.keys(groupedArticles).forEach(category => {
+  Object.keys(groupedArticles[category]).forEach(subcategory => {
+    groupedArticles[category][subcategory].sort((a, b) => 
+      new Date(b.data.pubDate || b.data.publishDate || 0).getTime() - 
+      new Date(a.data.pubDate || a.data.publishDate || 0).getTime()
+    );
+  });
+});
+
+// Group Weekly News by month/year
+if (groupedArticles['Weekly News']) {
+  const weeklyArticles = Object.values(groupedArticles['Weekly News']).flat();
+  const groupedByMonth = weeklyArticles.reduce((acc, article) => {
+    const date = new Date(article.data.pubDate || article.data.publishDate || 0);
+    const monthYear = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    
+    if (!acc[monthYear]) {
+      acc[monthYear] = [];
+    }
+    acc[monthYear].push(article);
+    
+    return acc;
+  }, {} as Record<string, typeof allArticles>);
+  
+  // Sort articles within each month by date (newest first)
+  Object.keys(groupedByMonth).forEach(monthYear => {
+    groupedByMonth[monthYear].sort((a, b) => 
+      new Date(b.data.pubDate || b.data.publishDate || 0).getTime() - 
+      new Date(a.data.pubDate || a.data.publishDate || 0).getTime()
+    );
+  });
+  
+  // Replace the Weekly News category with month-grouped data
+  groupedArticles['Weekly News'] = groupedByMonth;
+}
+
+const categories = Object.keys(groupedArticles);
+---
+
+<BaseLayout title="Articles">
+  <div class="max-w-7xl mx-auto py-12 animate-fade-in" id="articles-container">
+    <h1 class="text-5xl font-display font-light mb-8">articles</h1>
+    
+    <!-- Mobile Tabs (visible on mobile only) -->
+    <div class="md:hidden mb-6">
+      <div class="border border-gray-200 overflow-hidden">
+        <!-- Tab Headers -->
+        <div class="flex overflow-x-auto bg-gray-50">
+          {categories.map((category, index) => (
+            <button 
+              class={`mobile-tab-btn flex-shrink-0 px-4 py-3 text-sm font-sans border-r border-gray-200 last:border-r-0 transition-colors ${index === 0 ? 'bg-white text-gray-900' : 'text-gray-600 hover:bg-gray-100'}`}
+              data-category={category}
+            >
+              {category.toLowerCase()}
+            </button>
+          ))}
+        </div>
+        
+        <!-- Mobile Search -->
+        <div class="p-4 border-b border-gray-200 bg-white">
+          <input 
+            type="text" 
+            id="mobile-article-search"
+            placeholder="search articles..."
+            class="w-full p-3 border border-gray-300 text-sm font-sans focus:border-gray-500 focus:outline-none"
+          />
+        </div>
+        
+        <!-- Mobile Tab Content -->
+        <div class="bg-white">
+          {categories.map((category, index) => (
+            <div class={`mobile-tab-content p-4 ${index === 0 ? '' : 'hidden'}`} data-category={category}>
+              <div class="space-y-6">
+                {Object.entries(groupedArticles[category]).map(([subcategory, articles]) => (
+                  <div class="article-group" data-subcategory={subcategory}>
+                    {subcategory !== 'General' && (
+                      <h3 class="text-lg font-display font-light mb-3 text-gray-700 border-b border-gray-100 pb-2">
+                        {subcategory.toLowerCase()}
+                      </h3>
+                    )}
+                    <div class="space-y-3">
+                      {articles.map((article) => (
+                        <a 
+                          href={`/articles/${article.slug}`}
+                          class="article-item flex flex-col sm:flex-row sm:items-start sm:justify-between py-3 px-4 hover:bg-gray-50 rounded transition-colors border border-transparent hover:border-gray-200 block"
+                        >
+                          <div class="flex-1">
+                            <h4 class="font-sans font-medium text-gray-900 hover:text-black transition-colors">
+                              {article.data.title}
+                            </h4>
+                            {article.data.description && (
+                              <p class="text-sm text-gray-600 mt-1">
+                                {article.data.description}
+                              </p>
+                            )}
+                          </div>
+                          <span class="text-sm text-gray-500 mt-2 sm:mt-0 sm:ml-4 sm:whitespace-nowrap">
+                            {new Date(article.data.pubDate || article.data.publishDate).toLocaleDateString()}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          
+          <!-- Mobile Search Results -->
+          <div id="mobile-search-results" class="hidden p-4">
+            <div class="space-y-3" id="mobile-search-list">
+              <!-- Search results will be populated here -->
+            </div>
+            <div id="mobile-no-results" class="hidden text-center py-8 text-gray-500">
+              <p class="font-sans">no articles found matching your search</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Desktop Sidebar Layout (hidden on mobile) -->
+    <div class="hidden md:block border border-gray-300 overflow-hidden bg-white shadow-sm">
+      <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-80 border-r border-gray-300 flex flex-col bg-white">
+          <!-- Search -->
+          <div class="p-4 border-b border-gray-300 bg-white">
+            <input 
+              type="text" 
+              id="article-search"
+              placeholder="search articles..."
+              class="w-full p-3 border border-gray-300 text-sm font-sans focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+            />
+          </div>
+          
+          <!-- Categories Navigation -->
+          <div class="flex-1 bg-white">
+            <nav class="p-4 h-full">
+              <h3 class="font-display font-light mb-4 text-gray-900 text-lg">categories</h3>
+              <div class="space-y-2">
+                {categories.map((category, index) => (
+                  <button 
+                    class={`sidebar-btn w-full text-left px-4 py-3 text-sm transition-all duration-200 ${index === 0 ? 'bg-gray-100 text-gray-900 shadow-sm border border-gray-200' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:shadow-sm hover:border hover:border-gray-200'}`}
+                    data-category={category}
+                  >
+                    {category.toLowerCase()}
+                  </button>
+                ))}
+              </div>
+            </nav>
+          </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="flex-1 flex flex-col bg-white min-h-[600px]">
+          <!-- Content Header -->
+          <div class="px-6 pt-6 pb-4 border-b border-gray-300 bg-gray-50">
+            <div class="flex items-center justify-between">
+              <h2 id="content-title" class="text-2xl font-display font-light text-gray-900">
+                {categories[0]?.toLowerCase() || 'articles'}
+              </h2>
+              <span id="article-count" class="text-sm text-gray-500 font-medium"></span>
+            </div>
+          </div>
+          
+          <!-- Content Area -->
+          <div class="flex-1 p-6 bg-white min-h-[540px]">
+            {categories.map((category, index) => (
+              <div class={`sidebar-content ${index === 0 ? '' : 'hidden'}`} data-category={category}>
+                <div class="space-y-6">
+                  {Object.entries(groupedArticles[category]).map(([subcategory, articles]) => (
+                    <div class="article-group" data-subcategory={subcategory}>
+                      {subcategory !== 'General' && (
+                        <h3 class="text-lg font-display font-light mb-3 text-gray-700 border-b border-gray-100 pb-2">
+                          {subcategory.toLowerCase()}
+                        </h3>
+                      )}
+                      <div class="grid gap-4">
+                        {articles.map((article, index) => (
+                          <a 
+                            href={`/articles/${article.slug}`}
+                            class="article-item group block p-5 bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
+                          >
+                            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                              <div class="flex-1">
+                                <h4 class="font-sans font-semibold text-gray-900 group-hover:text-black transition-colors text-lg mb-2">
+                                  {article.data.title}
+                                </h4>
+                                {article.data.description && (
+                                  <p class="text-sm text-gray-600 leading-relaxed mb-3">
+                                    {article.data.description}
+                                  </p>
+                                )}
+                                <div class="flex gap-2">
+                                  <span class="px-3 py-1 bg-gray-100 text-xs text-gray-600 font-medium">{category.toLowerCase()}</span>
+                                  {subcategory !== 'General' && subcategory !== category && (
+                                    <span class="px-3 py-1 bg-gray-200 text-xs text-gray-700 font-medium">{subcategory.toLowerCase()}</span>
+                                  )}
+                                </div>
+                              </div>
+                              <span class="text-sm text-gray-500 mt-3 sm:mt-0 sm:ml-4 sm:whitespace-nowrap font-medium">
+                                {new Date(article.data.pubDate || article.data.publishDate).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+            
+            <!-- Search Results -->
+            <div id="search-results" class="hidden">
+              <div class="grid gap-4" id="search-list">
+                <!-- Search results will be populated here -->
+              </div>
+              <div id="no-results" class="hidden text-center py-12 text-gray-500">
+                <p class="font-sans text-lg">no articles found matching your search</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('article-search') as HTMLInputElement;
+      const searchResults = document.getElementById('search-results');
+      const searchList = document.getElementById('search-list');
+      const noResults = document.getElementById('no-results');
+      const contentTitle = document.getElementById('content-title');
+      const articleCount = document.getElementById('article-count');
+      
+      // Build searchable articles array from DOM (only from desktop content to avoid duplicates)
+      const allArticles: Array<{
+        title: string;
+        description: string;
+        slug: string;
+        date: string;
+        category: string;
+        subcategory: string;
+      }> = [];
+
+      // Extract article data only from desktop sidebar content to avoid duplicates
+      document.querySelectorAll('.sidebar-content').forEach(categoryContent => {
+        const category = categoryContent.getAttribute('data-category') || '';
+        categoryContent.querySelectorAll('.article-group').forEach(group => {
+          const subcategory = group.getAttribute('data-subcategory') || 'General';
+          group.querySelectorAll('.article-item').forEach(item => {
+            const link = item.querySelector('a') || item;
+            const titleEl = item.querySelector('h4') || item.querySelector('a');
+            const descEl = item.querySelector('p');
+            const dateEl = item.querySelector('.text-gray-500');
+            
+            if (link && titleEl) {
+              const href = link.getAttribute('href') || '';
+              allArticles.push({
+                title: titleEl.textContent || '',
+                description: descEl?.textContent || '',
+                slug: href.replace('/articles/', '') || '',
+                date: dateEl?.textContent || '',
+                category: category,
+                subcategory: subcategory
+              });
+            }
+          });
+        });
+      });
+
+      // Mobile search elements
+      const mobileSearchInput = document.getElementById('mobile-article-search') as HTMLInputElement;
+      const mobileSearchResults = document.getElementById('mobile-search-results');
+      const mobileSearchList = document.getElementById('mobile-search-list');
+      const mobileNoResults = document.getElementById('mobile-no-results');
+
+      // Enhanced search functionality for both desktop and mobile
+      function performSearch(query: string, isMobile = false) {
+        const targetResults = isMobile ? mobileSearchResults : searchResults;
+        const targetList = isMobile ? mobileSearchList : searchList;
+        const targetNoResults = isMobile ? mobileNoResults : noResults;
+        const contentSelector = isMobile ? '.mobile-tab-content' : '.sidebar-content';
+        
+        if (!query.trim()) {
+          // Hide search results and show active content
+          targetResults?.classList.add('hidden');
+          
+          if (isMobile) {
+            // Show active mobile tab content
+            const activeTab = document.querySelector('.mobile-tab-btn.bg-white');
+            const activeCategory = activeTab?.getAttribute('data-category');
+            document.querySelectorAll('.mobile-tab-content').forEach(content => {
+              if (content.getAttribute('data-category') === activeCategory) {
+                content.classList.remove('hidden');
+              } else {
+                content.classList.add('hidden');
+              }
+            });
+          } else {
+            // Show active desktop sidebar content
+            document.querySelectorAll('.sidebar-content').forEach(content => {
+              const isActive = !content.classList.contains('hidden');
+              if (isActive) content.classList.remove('hidden');
+            });
+          }
+          return;
+        }
+
+        const results = allArticles.filter(article => 
+          article.title.toLowerCase().includes(query.toLowerCase()) ||
+          article.description.toLowerCase().includes(query.toLowerCase()) ||
+          article.category.toLowerCase().includes(query.toLowerCase()) ||
+          article.subcategory.toLowerCase().includes(query.toLowerCase())
+        );
+
+        // Hide all content
+        document.querySelectorAll(contentSelector).forEach(content => {
+          content.classList.add('hidden');
+        });
+
+        // Show search results
+        targetResults?.classList.remove('hidden');
+        
+        if (results.length === 0) {
+          targetList!.innerHTML = '';
+          targetNoResults?.classList.remove('hidden');
+          if (!isMobile) {
+            contentTitle!.textContent = 'search results';
+            articleCount!.textContent = '0 articles';
+          }
+        } else {
+          targetNoResults?.classList.add('hidden');
+          if (!isMobile) {
+            contentTitle!.textContent = 'search results';
+            articleCount!.textContent = `${results.length} article${results.length !== 1 ? 's' : ''}`;
+          }
+          
+          targetList!.innerHTML = results.map(article => `
+            <a href="/articles/${article.slug}" class="article-item group block p-5 bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                <div class="flex-1">
+                  <h4 class="font-sans font-semibold text-gray-900 group-hover:text-black transition-colors text-lg mb-2">
+                    ${article.title}
+                  </h4>
+                  ${article.description ? `<p class="text-sm text-gray-600 leading-relaxed mb-3">${article.description}</p>` : ''}
+                  <div class="flex gap-2">
+                    <span class="px-3 py-1 bg-gray-100 text-xs text-gray-600 font-medium">${article.category.toLowerCase()}</span>
+                    ${article.subcategory !== article.category && article.subcategory !== 'General' ? `<span class="px-3 py-1 bg-gray-200 text-xs text-gray-700 font-medium">${article.subcategory.toLowerCase()}</span>` : ''}
+                  </div>
+                </div>
+                <span class="text-sm text-gray-500 mt-3 sm:mt-0 sm:ml-4 sm:whitespace-nowrap font-medium">${article.date}</span>
+              </div>
+            </a>
+          `).join('');
+        }
+      }
+
+      // Search input handlers
+      searchInput?.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value;
+        performSearch(query, false);
+      });
+
+      mobileSearchInput?.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value;
+        performSearch(query, true);
+      });
+
+      // Desktop sidebar navigation
+      document.querySelectorAll('.sidebar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = (btn as HTMLElement).dataset.category;
+          if (!category) return;
+          
+          // Clear search
+          if (searchInput) searchInput.value = '';
+          searchResults?.classList.add('hidden');
+          
+          // Update sidebar buttons
+          document.querySelectorAll('.sidebar-btn').forEach(b => {
+            b.classList.remove('bg-gray-100', 'text-gray-900', 'shadow-sm', 'border', 'border-gray-200');
+            b.classList.add('text-gray-600', 'hover:bg-gray-100', 'hover:text-gray-900', 'hover:shadow-sm', 'hover:border', 'hover:border-gray-200');
+          });
+          btn.classList.add('bg-gray-100', 'text-gray-900', 'shadow-sm', 'border', 'border-gray-200');
+          btn.classList.remove('text-gray-600', 'hover:bg-gray-100', 'hover:text-gray-900', 'hover:shadow-sm', 'hover:border', 'hover:border-gray-200');
+          
+          // Update content
+          document.querySelectorAll('.sidebar-content').forEach(content => {
+            content.classList.add('hidden');
+          });
+          const targetContent = document.querySelector(`.sidebar-content[data-category="${category}"]`);
+          if (targetContent) {
+            targetContent.classList.remove('hidden');
+            
+            // Update title and count
+            contentTitle!.textContent = category.toLowerCase();
+            const articleItemCount = targetContent.querySelectorAll('.article-item').length;
+            articleCount!.textContent = `${articleItemCount} article${articleItemCount !== 1 ? 's' : ''}`;
+          }
+        });
+      });
+
+      // Mobile tab navigation
+      document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const category = (btn as HTMLElement).dataset.category;
+          if (!category) return;
+          
+          // Clear search
+          if (mobileSearchInput) mobileSearchInput.value = '';
+          mobileSearchResults?.classList.add('hidden');
+          
+          // Update mobile tab buttons
+          document.querySelectorAll('.mobile-tab-btn').forEach(b => {
+            b.classList.remove('bg-white', 'text-gray-900');
+            b.classList.add('text-gray-600', 'hover:bg-gray-100');
+          });
+          btn.classList.add('bg-white', 'text-gray-900');
+          btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+          
+          // Update mobile content
+          document.querySelectorAll('.mobile-tab-content').forEach(content => {
+            content.classList.add('hidden');
+          });
+          const targetContent = document.querySelector(`.mobile-tab-content[data-category="${category}"]`);
+          if (targetContent) {
+            targetContent.classList.remove('hidden');
+          }
+        });
+      });
+
+      // Set initial count
+      const initialContent = document.querySelector('.sidebar-content:not(.hidden)');
+      if (initialContent) {
+        const initialCount = initialContent.querySelectorAll('.article-item').length;
+        articleCount!.textContent = `${initialCount} article${initialCount !== 1 ? 's' : ''}`;
+      }
+    });
+  </script>
+</BaseLayout>

@@ -1,33 +1,80 @@
 ---
-// src/components/Footer.astro
+interface Props {
+  variant?: 1 | 2 | 3 | 4;
+}
+const { variant = 4 } = Astro.props;
 ---
-<footer class="bg-main text-gray-300 border-t border-gray-700 footer-anim">
-    <div class="container mx-auto px-4 py-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            <div class="md:col-span-1 mb-4 md:mb-0">
-                <h3 class="font-serif text-2xl font-bold text-white">angusq.com</h3>
-                <p class="text-sm mt-2 text-gray-400">Mechatronics Engineer</p>
-            </div>
-            <div>
-                <h4 class="font-bold tracking-wider uppercase text-sm text-gray-400">Links</h4>
-                <ul class="mt-4 space-y-2">
-                    <li><a href="/portfolio" class="link-underline-white hover:text-white">Portfolio</a></li>
-                    <li><a href="/newsletter" class="link-underline-white hover:text-white">Newsletter</a></li>
-                    <li><a href="/about" class="link-underline-white hover:text-white">About</a></li>
-                    <li><a href="/contact" class="link-underline-white hover:text-white">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold tracking-wider uppercase text-sm text-gray-400">Social</h4>
-                 <div class="flex space-x-4 mt-4 justify-start">
-                     <a href="https://www.linkedin.com/in/angusq" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-linkedin-in fa-lg"></i></a>
-                     <a href="https://github.com/Angus-Q" target="_blank" rel="noopener noreferrer" aria-label="Github" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-github fa-lg"></i></a>
-                     <a href="https://www.youtube.com/@angusq" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube fa-lg"></i></a>
-                 </div>
-            </div>
+
+{variant === 1 && (
+  <!-- Footer Option 1: Minimal with social links -->
+  <footer class="mt-24 py-12 border-t border-gray-200">
+    <div class="container-px max-w-5xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <p class="text-sm text-gray-600">© 2025 angus quigley</p>
+        <div class="flex space-x-6 text-sm">
+          <a href="mailto:hello@angusquigley.com" class="text-gray-600 hover:text-gray-900 clean-underline">email</a>
+          <a href="/contact" class="text-gray-600 hover:text-gray-900 clean-underline">contact</a>
         </div>
-        <div class="border-t border-gray-700 mt-6 pt-6 text-left text-sm text-gray-400">
-            <p>&copy; {new Date().getFullYear()} Angus Quigley. All Rights Reserved.</p>
-        </div>
+      </div>
     </div>
-</footer>
+  </footer>
+)}
+
+{variant === 2 && (
+  <!-- Footer Option 2: Centered with navigation -->
+  <footer class="mt-24 py-16 bg-gray-50">
+    <div class="container-px max-w-5xl mx-auto text-center">
+      <div class="mb-8">
+        <h3 class="font-display text-lg lowercase mb-4">angus quigley</h3>
+        <p class="text-gray-600 text-sm">mechatronics engineer</p>
+      </div>
+      <nav class="mb-8">
+        <ul class="flex justify-center space-x-8 text-sm font-display">
+          <li><a href="/about" class="text-gray-600 hover:text-gray-900 clean-underline">about</a></li>
+          <li><a href="/projects" class="text-gray-600 hover:text-gray-900 clean-underline">portfolio</a></li>
+          <li><a href="/articles" class="text-gray-600 hover:text-gray-900 clean-underline">articles</a></li>
+          <li><a href="/contact" class="text-gray-600 hover:text-gray-900 clean-underline">contact</a></li>
+        </ul>
+      </nav>
+      <p class="text-xs text-gray-500">© 2025 all rights reserved</p>
+    </div>
+  </footer>
+)}
+
+{variant === 3 && (
+  <!-- Footer Option 3: Two-column layout -->
+  <footer class="mt-24 py-12 border-t border-gray-200">
+    <div class="container-px max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-display text-lg lowercase mb-3">let's connect</h3>
+          <p class="text-sm text-gray-600 mb-4">interested in collaborating or have a question?</p>
+          <a href="/contact" class="text-sm text-gray-900 clean-underline">get in touch →</a>
+        </div>
+        <div class="md:text-right">
+          <p class="text-sm text-gray-600 mb-2">angus quigley</p>
+          <p class="text-xs text-gray-500">mechatronics engineer</p>
+          <p class="text-xs text-gray-500 mt-4">© 2025</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+)}
+
+{variant === 4 && (
+  <!-- Footer Option 4: Simple single line with social links -->
+  <footer class="mt-24 py-8">
+    <div class="container-px max-w-5xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div class="text-sm text-gray-500">
+          © 2025 Angus Quigley
+        </div>
+        <div class="flex space-x-6 text-sm">
+          <a href="https://www.linkedin.com/in/angusq" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700 clean-underline">LinkedIn</a>
+          <a href="https://github.com/Angus-Q" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700 clean-underline">GitHub</a>
+          <a href="https://www.youtube.com/@angusq" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700 clean-underline">YouTube</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+)}

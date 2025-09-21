@@ -1,21 +1,48 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="404 - Page Not Found | Angus Quigley">
-    <div class="fade-in-on-load min-h-screen flex flex-col justify-center items-center bg-white px-4">
-        <div class="text-center max-w-md mx-auto">
-            <h1 class="font-serif text-8xl md:text-9xl font-bold text-main mb-4">
-                404
-            </h1>
-            <h2 class="font-serif text-2xl md:text-3xl font-bold text-main mb-6">
-                Page Not Found
-            </h2>
-            <p class="text-lg text-gray-600 mb-8">
-                The page you're looking for doesn't exist.
-            </p>
-            <a href="/" class="inline-block bg-gray-800 text-white font-bold py-3 px-8 rounded-full hover:bg-main transition-all text-base shadow-lg hover:shadow-xl">
-                Back to Home
-            </a>
+<BaseLayout title="Angus Quigley | Page Not Found" description="the page you're looking for doesn't exist">
+  <section class="py-16 min-h-[60vh] flex items-center justify-center">
+    <div class="text-center max-w-lg">
+      <h1 class="text-6xl font-display font-light mb-6 text-gray-900">
+        404
+      </h1>
+      
+      <h2 class="text-2xl font-display font-light mb-6 text-gray-700">
+        page not found
+      </h2>
+      
+      <p class="text-gray-600 mb-8 leading-relaxed">
+        the page you're looking for doesn't exist or has been moved. 
+        let's get you back on track.
+      </p>
+      
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/" 
+            class="inline-flex items-center justify-center px-6 py-3 border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 clean-underline font-display"
+          >
+            ← back home
+          </a>
+          <a 
+            href="/contact" 
+            class="inline-flex items-center justify-center px-6 py-3 text-gray-700 hover:text-gray-900 transition-colors duration-300 clean-underline font-display"
+          >
+            get in touch
+          </a>
         </div>
+        
+        <div class="mt-8 pt-8 border-t border-gray-200">
+          <p class="text-sm text-gray-500 mb-4">or try one of these pages:</p>
+          <nav class="flex flex-wrap justify-center gap-6 text-sm">
+            <a href="/about" class="text-gray-600 hover:text-gray-900 clean-underline">about</a>
+            <a href="/projects" class="text-gray-600 hover:text-gray-900 clean-underline">portfolio</a>
+            <a href="/articles" class="text-gray-600 hover:text-gray-900 clean-underline">articles</a>
+            <a href="/contact" class="text-gray-600 hover:text-gray-900 clean-underline">contact</a>
+          </nav>
+        </div>
+      </div>
     </div>
+  </section>
 </BaseLayout>

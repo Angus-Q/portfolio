@@ -1,89 +1,123 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-// Get collections with error handling
-const portfolioCollection = await getCollection('portfolio');
-const newsletterCollection = await getCollection('newsletter');
-
-const portfolioPosts = portfolioCollection ? portfolioCollection.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()) : [];
-const newsletterPosts = newsletterCollection ? newsletterCollection.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()) : [];
-
-const featuredProject = portfolioPosts[0];
-const latestNewsletter = newsletterPosts[0];
 ---
-<BaseLayout title="Angus Quigley - Personal Portfolio">
-    {/* Hero section positioned right below navbar */}
-    <section id="hero" class="relative h-[60vh] sm:h-[50vh] flex flex-col justify-center items-start bg-cover bg-center bg-no-repeat" style="background-image: url('/images/forest1.jpg');">
-        <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40 z-0"></div>
-        <div class="container mx-auto relative z-10 px-4 fade-in-on-load">
-            <div class="max-w-5xl mx-auto">
-                <h1 id="hero-text-container" class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight drop-shadow-lg">
-                    Building and documenting projects in engineering and aerospace.
-                </h1>
-                <p id="hero-subtitle" class="mt-6 text-base sm:text-lg md:text-xl text-white drop-shadow-md">
-                    A portfolio by Angus Quigley, a Mechatronics Engineer focusing on embedded systems and aerospace.
-                </p>
-            </div>
-        </div>
-        <div id="scroll-indicator" class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 z-10">
-            <svg class="w-6 h-6 text-white animate-bounce drop-shadow-md" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        </div>
-    </section>
+<BaseLayout title="Angus Quigley | Mechatronics Engineer" description="Designer/Developer portfolio and newsletter" heroMode={true} isHomepage={true}>
+  <!-- Full Screen Hero -->
+  <section class="fixed inset-0 w-full h-screen bg-black text-white overflow-hidden">
+    <!-- Background image with right alignment and fade-in animation -->
+    <img 
+      src="/images/angus1.jpg" 
+      alt="Angus Quigley Portrait" 
+      class="absolute inset-0 w-full h-full object-cover object-right animate-fade-in"
+      style="object-position: right center;"
+    />
     
-    <div class="fade-in-on-load">
-        <section id="portfolio" class="gsap-anim py-20 md:py-32 bg-section-darker">
-            <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto">
-                <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Featured Project</h2><p class="text-gray-600 text-lg">A selection of my recent work and explorations.</p></div>
-                <div>{featuredProject ? (<div class="bg-white rounded-2xl shadow-lg overflow-hidden"><div class="grid grid-cols-1 md:grid-cols-2"><div class="p-8 md:p-12 order-2 md:order-1 flex flex-col justify-center"><div><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Embedded Systems</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{featuredProject.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{featuredProject.data.description}</p><a href={`/portfolio/${featuredProject.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-accent">View Project Details</a></div></div><div class="order-1 md:order-2"><img src={featuredProject.data.image?.src} alt={featuredProject.data.image?.alt} class="w-full h-full object-cover"></div></div></div>) : <p>No projects yet.</p>}</div>
-                <div class="mt-16 text-left">
-                    <a href="/portfolio" class="inline-block bg-gray-200 text-main font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition-all text-base shadow-lg hover:shadow-xl">Explore Full Portfolio</a>
-                </div>
-            </div></div>
-        </section>
-    </div>
-    <div class="fade-in-on-load">
-        <section id="newsletter" class="gsap-anim py-20 md:py-32 bg-white">
-            <div class="container mx-auto px-4"><div class="max-w-5xl mx-auto">
-                <div class="md:w-3/4 mb-12"><h2 class="font-serif text-4xl font-bold text-main mb-4">Newsletter</h2><p class="text-gray-600 text-lg">Occasional thoughts on technology, engineering, and the things I'm building.</p></div>
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"><div class="grid grid-cols-1 md:grid-cols-2">{latestNewsletter ? (<div class="p-8 md:p-12 order-2 md:order-1"><p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Latest Issue</p><h3 class="font-serif text-3xl font-bold text-main mt-2">{latestNewsletter.data.title}</h3><p class="mt-4 text-gray-600 leading-relaxed">{latestNewsletter.data.description}</p><a href={`/newsletter/${latestNewsletter.slug}`} class="inline-block mt-8 font-bold text-main link-underline hover:text-main">Read The Article</a></div>) : <div class="p-8 md:p-12"><p>No newsletter issues yet.</p></div>}
-                {latestNewsletter && latestNewsletter.data.image ? (
-                    <div class="order-1 md:order-2">
-                        <img src={latestNewsletter.data.image.src} alt={latestNewsletter.data.image.alt} class="w-full h-full object-cover min-h-[300px]">
+    <!-- Text and navigation overlay -->
+    <div class="absolute inset-0 flex items-center">
+      <div class="container-px max-w-5xl mx-auto w-full relative">
+        <div class="max-w-4xl relative">
+          <!-- Main heading with fade-in - positioned behind person -->
+          <h1 class="font-display text-6xl md:text-7xl lg:text-8xl leading-none mb-4 relative lowercase text-white animate-fade-in-up scroll-fade absolute top-1/2 left-0 transform -translate-y-1/2 whitespace-nowrap select-none pointer-events-none mix-blend-screen">
+            <span class="block relative">angus quigley</span>
+          </h1>
+          <div class="relative z-20">
+            <div>
+              <p class="text-2xl md:text-3xl lg:text-4xl font-display opacity-90 relative z-10 lowercase text-white mb-8 animate-fade-in-up-delay scroll-fade">
+                mechatronics engineer
+              </p>
+            
+              <!-- Horizontal navigation menu -->
+              <nav class="relative z-20 animate-fade-in-left scroll-fade" id="nav-menu">
+                <ul class="flex gap-8 items-center">
+                  <li class="animate-fade-in-left-stagger">
+                    <div class="nav-item p-2 transition-all duration-300 cursor-pointer group" data-href="/about" data-index="0">
+                      <div class="font-display text-sm">
+                        <span class="text-white relative">
+                          about
+                          <span class="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                      </div>
                     </div>
-                ) : (
-                    <div class="bg-section-darker p-8 md:p-12 flex flex-col justify-center order-1 md:order-2">
-                        <h4 class="font-serif text-xl font-bold text-main mb-3">Explore the Archive</h4>
-                        <p class="text-gray-600 mb-6">Read all past articles and insights.</p>
-                        <a href="/newsletter" class="text-center bg-main text-white font-bold py-3 px-6 rounded-full hover:bg-hover-accent transition-all w-full shadow-lg hover:shadow-xl">See All Articles</a>
+                  </li>
+                  <li class="animate-fade-in-left-stagger">
+                    <div class="nav-item p-2 transition-all duration-300 cursor-pointer group" data-href="/portfolio" data-index="1">
+                      <div class="font-display text-sm">
+                        <span class="text-white relative">
+                          portfolio
+                          <span class="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                      </div>
                     </div>
-                )}</div></div>
-            </div></div>
-        </section>
-    </div>
-    <div class="fade-in-on-load">
-        <section id="about" class="gsap-anim py-20 md:py-32 bg-section-darker">
-            <div class="container mx-auto px-4"><div class="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-8 items-center max-w-5xl mx-auto">
-                <div class="lg:col-span-2">
-                    <h2 class="font-serif text-4xl font-bold text-main mb-4">About Me</h2>
-                    <div class="mt-6 text-lg text-gray-600 leading-relaxed space-y-4"><p>At the start of 2025, when I finished my Bachelor of Engineering, I was unsure what industry I wanted to join. During my time at university, I hadn't completed many additional projects or done much self-driven learning.</p><p>After a lot of thinking and exploring different areas of engineering, I've found myself finding aerospace and aviation interesting. My goal is to learn and build some aerospace-related projects which I will be documenting on my website with the skillset I have developed within other industries and throughout my time at university. Keep an eye out on this space for any new updates or portfolio entries. Cheers! Angus</p></div>
-                    <div class="mt-8">
-                        <a href="/about" class="inline-block bg-main text-white font-bold py-3 px-8 rounded-full hover:bg-hover-accent transition-all text-base shadow-lg hover:shadow-xl">Find Out More</a>
+                  </li>
+                  <li class="animate-fade-in-left-stagger">
+                    <div class="nav-item p-2 transition-all duration-300 cursor-pointer group" data-href="/contact" data-index="2">
+                      <div class="font-display text-sm">
+                        <span class="text-white relative">
+                          contact
+                          <span class="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                      </div>
                     </div>
-                </div>
-                <div class="hidden lg:block w-full max-w-xs mx-auto lg:mx-0 lg:justify-self-end"><img src="/profile.png" alt="A photo of Angus Quigley" class="rounded-2xl w-full object-cover shadow-lg border-4 border-white"></div>
-            </div></div>
-        </section>
-    </div>
-    <div class="fade-in-on-load">
-        <section id="contact" class="gsap-anim py-20 md:py-32 bg-white">
-            <div class="container mx-auto px-4">
-                <div class="max-w-5xl mx-auto">
-                    <h2 class="font-serif text-4xl font-bold text-main mb-4">Get In Touch</h2>
-                    <p class="text-gray-600 mb-8 max-w-xl text-lg">I'm always looking for interesting challenges. If you have a project in mind, or just want to connect, feel free to reach out.</p>
-                    <a href="/contact" class="inline-block bg-main text-white font-bold py-3 px-8 rounded-full hover:bg-hover-accent transition-all text-base shadow-lg hover:shadow-xl">Say Hello</a>
-                </div>
+                  </li>
+                </ul>
+              </nav>
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <style>
+    /* No custom nav item styles needed - using Tailwind classes */
+  </style>
+
+  <script>
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    // Mouse navigation with page transitions
+    navItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const href = item.getAttribute('data-href');
+        if (href) {
+          // Mark that we're coming from the index page
+          sessionStorage.setItem('fromIndex', 'true');
+          
+          const transition = document.getElementById('pageTransition');
+          if (transition) {
+            // Set transition to white (light theme) since we're going to light pages
+            transition.classList.remove('dark');
+            transition.classList.add('active');
+            setTimeout(() => {
+              window.location.href = href;
+            }, 200);
+          } else {
+            window.location.href = href;
+          }
+        }
+      });
+    });
+
+    // Scroll fade effect
+    let lastScrollY = 0;
+    const scrollElements = document.querySelectorAll('.scroll-fade');
+    
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+      const scrollDistance = Math.abs(currentScrollY - lastScrollY);
+      
+      scrollElements.forEach(element => {
+        if (scrollDistance > 50) {
+          element.classList.add('fade-out');
+        } else {
+          element.classList.remove('fade-out');
+        }
+      });
+      
+      lastScrollY = currentScrollY;
+    }
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  </script>
 </BaseLayout>

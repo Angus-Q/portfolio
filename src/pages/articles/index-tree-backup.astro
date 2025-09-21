@@ -1,0 +1,286 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allArticles = await getCollection('articles');
+
+// Group articles by category and subcategory
+const groupedArticles = allArticles.reduce((acc, article) => {
+  const category = article.data.category || 'Uncategorized';
+  const subcategory = article.data.subcategory || 'General';
+  
+  if (!acc[category]) {
+    acc[category] = {};
+  }
+  if (!acc[category][subcategory]) {
+    acc[category][subcategory] = [];
+  }
+  acc[category][subcategory].push(article);
+  
+  return acc;
+}, {} as Record<string, Record<string, typeof allArticles>>);
+
+// Sort articles within each group by date
+Object.keys(groupedArticles).forEach(category => {
+  Object.keys(groupedArticles[category]).forEach(subcategory => {
+    groupedArticles[category][subcategory].sort((a, b) => 
+      new Date(b.data.pubDate || b.data.publishDate || 0).getTime() - 
+      new Date(a.data.pubDate || a.data.publishDate || 0).getTime()
+    );
+  });
+});
+---
+
+<BaseLayout title="Angus Quigley | Articles" description="notes and updates">
+  <section class="py-16 fade-in">
+    <h1 class="text-5xl font-display font-light mb-12 relative">
+      articles
+    </h1>
+
+    <div class="space-y-8">
+      <!-- Engineering Documentation -->
+      <div class="fade-in-up" style="animation-delay: 0.2s;">
+        <button class="folder-toggle flex items-center text-2xl font-display font-light mb-4 hover:text-gray-600 transition-colors w-full text-left group" data-target="engineering-docs">
+          <span class="arrow-icon mr-3 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+          engineering documentation
+        </button>
+        
+        <div class="folder-content hidden ml-6 space-y-4 transition-all duration-300 ease-in-out" id="engineering-docs">
+          {groupedArticles['Engineering Documentation'] && Object.entries(groupedArticles['Engineering Documentation']).map(([subcategory, articles]) => (
+            <div>
+              <button class="subfolder-toggle flex items-center text-lg font-display font-light text-gray-700 mb-2 hover:text-gray-900 transition-colors w-full text-left group" data-target={`eng-${subcategory.replace(/\s+/g, '-').toLowerCase()}`}>
+                <span class="arrow-icon mr-2 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+                {subcategory.toLowerCase()}
+              </button>
+              <div class="subfolder-content hidden ml-4 space-y-1 transition-all duration-300 ease-in-out" id={`eng-${subcategory.replace(/\s+/g, '-').toLowerCase()}`}>
+                {articles.map((article) => (
+                  <a 
+                    href={`/articles/${article.slug}`}
+                    class="block py-2 px-3 text-gray-700 hover:text-black hover:bg-gray-50 rounded transition-colors group font-sans"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span class="group-hover:underline">{article.data.title}</span>
+                      <span class="text-sm text-gray-500">
+                        {new Date(article.data.pubDate || article.data.publishDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Project Updates -->
+      <div class="fade-in-up" style="animation-delay: 0.4s;">
+        <button class="folder-toggle flex items-center text-2xl font-display font-light mb-4 hover:text-gray-600 transition-colors w-full text-left group" data-target="project-updates">
+          <span class="arrow-icon mr-3 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+          project updates
+        </button>
+        
+        <div class="folder-content hidden ml-6 space-y-4 transition-all duration-300 ease-in-out" id="project-updates">
+          {groupedArticles['Project Updates'] && Object.entries(groupedArticles['Project Updates']).map(([subcategory, articles]) => (
+            <div>
+              <button class="subfolder-toggle flex items-center text-lg font-display font-light text-gray-700 mb-2 hover:text-gray-900 transition-colors w-full text-left group" data-target={`proj-${subcategory.replace(/\s+/g, '-').toLowerCase()}`}>
+                <span class="arrow-icon mr-2 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+                {subcategory.toLowerCase()}
+              </button>
+              <div class="subfolder-content hidden ml-4 space-y-1 transition-all duration-300 ease-in-out" id={`proj-${subcategory.replace(/\s+/g, '-').toLowerCase()}`}>
+                {articles.map((article) => (
+                  <a 
+                    href={`/articles/${article.slug}`}
+                    class="block py-2 px-3 text-gray-700 hover:text-black hover:bg-gray-50 rounded transition-colors group font-sans"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span class="group-hover:underline">{article.data.title}</span>
+                      <span class="text-sm text-gray-500">
+                        {new Date(article.data.pubDate || article.data.publishDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Walkthrough Guides -->
+      <div class="fade-in-up" style="animation-delay: 0.6s;">
+        <button class="folder-toggle flex items-center text-2xl font-display font-light mb-4 hover:text-gray-600 transition-colors w-full text-left group" data-target="walkthrough-guides">
+          <span class="arrow-icon mr-3 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+          walkthrough guides
+        </button>
+        
+        <div class="folder-content hidden ml-6 space-y-4 transition-all duration-300 ease-in-out" id="walkthrough-guides">
+          {groupedArticles['Walkthrough Guides'] && Object.entries(groupedArticles['Walkthrough Guides']).map(([subcategory, articles]) => (
+            <div>
+              <button class="subfolder-toggle flex items-center text-lg font-display font-light text-gray-700 mb-2 hover:text-gray-900 transition-colors w-full text-left group" data-target={`guide-${subcategory.replace(/\s+/g, '-').toLowerCase()}`}>
+                <span class="arrow-icon mr-2 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+                {subcategory.toLowerCase()}
+              </button>
+              <div class="subfolder-content hidden ml-4 space-y-1 transition-all duration-300 ease-in-out" id={`guide-${subcategory.replace(/\s+/g, '-').toLowerCase()}`}>
+                {articles.map((article) => (
+                  <a 
+                    href={`/articles/${article.slug}`}
+                    class="block py-2 px-3 text-gray-700 hover:text-black hover:bg-gray-50 rounded transition-colors group font-sans"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span class="group-hover:underline">{article.data.title}</span>
+                      <span class="text-sm text-gray-500">
+                        {new Date(article.data.pubDate || article.data.publishDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Weekly Progress Updates -->
+      <div class="fade-in-up" style="animation-delay: 0.8s;">
+        <button class="folder-toggle flex items-center text-2xl font-display font-light mb-4 hover:text-gray-600 transition-colors w-full text-left group" data-target="weekly-updates">
+          <span class="arrow-icon mr-3 transition-opacity duration-500 opacity-0 group-hover:opacity-100">></span>
+          weekly progress updates
+        </button>
+        
+        <div class="folder-content hidden ml-6 transition-all duration-300 ease-in-out" id="weekly-updates">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {groupedArticles['Weekly Progress Updates'] && 
+             groupedArticles['Weekly Progress Updates']['General'] && 
+             groupedArticles['Weekly Progress Updates']['General']
+               .sort((a, b) => {
+                 const getIssueNumber = (slug: string) => {
+                   const match = slug.match(/issue-(\d+)/);
+                   return match ? parseInt(match[1]) : 0;
+                 };
+                 return getIssueNumber(a.slug) - getIssueNumber(b.slug);
+               })
+               .map((article) => (
+              <a 
+                href={`/articles/${article.slug}`}
+                class="block py-2 px-3 text-center text-gray-700 hover:text-black hover:bg-gray-50 rounded transition-colors group font-sans"
+              >
+                <span class="group-hover:underline text-sm">
+                  {article.data.title}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-16 pt-8 border-t border-gray-200 fade-in-up" style="animation-delay: 1.6s;">
+      <p class="text-gray-600 text-sm">
+        engineering documentation, project updates, and technical insights.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Smooth animation helper function
+      function smoothToggle(content: HTMLElement, arrow: HTMLElement | null, isExpanding: boolean) {
+        if (isExpanding) {
+          // Expanding
+          content.classList.remove('hidden');
+          
+          // Get the natural height
+          content.style.height = 'auto';
+          const targetHeight = content.offsetHeight;
+          
+          // Set initial state
+          content.style.height = '0px';
+          content.style.opacity = '0';
+          content.style.transform = 'translateY(-5px)';
+          content.style.overflow = 'hidden';
+          
+          if (arrow) {
+            arrow.style.transform = 'rotate(90deg)';
+            arrow.style.transition = 'transform 0.15s ease-out';
+          }
+          
+          // Force reflow
+          content.offsetHeight;
+          
+          // Animate to target
+          content.style.transition = 'height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease-out, transform 0.35s ease-out';
+          content.style.height = targetHeight + 'px';
+          content.style.opacity = '1';
+          content.style.transform = 'translateY(0)';
+          
+          // Clean up after animation
+          setTimeout(() => {
+            content.style.height = '';
+            content.style.overflow = '';
+            content.style.transition = '';
+          }, 350);
+        } else {
+          // Collapsing
+          const currentHeight = content.offsetHeight;
+          content.style.height = currentHeight + 'px';
+          content.style.overflow = 'hidden';
+          content.style.transition = 'height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease-out, transform 0.35s ease-out';
+          
+          if (arrow) {
+            arrow.style.transform = 'rotate(0deg)';
+            arrow.style.transition = 'transform 0.15s ease-out';
+          }
+          
+          // Force reflow
+          content.offsetHeight;
+          
+          // Animate to collapsed
+          content.style.height = '0px';
+          content.style.opacity = '0';
+          content.style.transform = 'translateY(-5px)';
+          
+          // Wait for animation to fully complete before hiding
+          content.addEventListener('transitionend', function handleTransitionEnd(e) {
+            if (e.propertyName === 'height' && e.target === content) {
+              content.removeEventListener('transitionend', handleTransitionEnd);
+              content.classList.add('hidden');
+              content.style.height = '';
+              content.style.overflow = '';
+              content.style.transition = '';
+              content.style.opacity = '';
+              content.style.transform = '';
+            }
+          });
+        }
+      }
+
+      // Handle main folder toggles
+      document.querySelectorAll('.folder-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+          const targetId = (button as HTMLElement).dataset.target;
+          const content = document.getElementById(targetId!);
+          const arrow = button.querySelector('.arrow-icon') as HTMLElement;
+          
+          if (content) {
+            const isExpanding = content.classList.contains('hidden');
+            smoothToggle(content, arrow, isExpanding);
+          }
+        });
+      });
+
+      // Handle subfolder toggles
+      document.querySelectorAll('.subfolder-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+          const targetId = (button as HTMLElement).dataset.target;
+          const content = document.getElementById(targetId!);
+          const arrow = button.querySelector('.arrow-icon') as HTMLElement;
+          
+          if (content) {
+            const isExpanding = content.classList.contains('hidden');
+            smoothToggle(content, arrow, isExpanding);
+          }
+        });
+      });
+    });
+  </script>
+</BaseLayout>

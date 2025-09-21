@@ -1,68 +1,235 @@
 ---
-// src/layouts/BaseLayout.astro
-import Header from '../components/Header.astro';
+import '../styles/global.css';
+import '../styles/fonts.css';
 import Footer from '../components/Footer.astro';
-const { title } = Astro.props;
+
+interface Props { title?: string; description?: string; heroMode?: boolean; isHomepage?: boolean }
+const { title = 'Portfolio', description = 'Personal site', heroMode = false, isHomepage = false } = Astro.props as Props;
 ---
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <style is:global>
-        @import '../styles/global.css';
-        html { background-color: #ffffff; }
-        body { background-color: #ffffff; color: #111827; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .link-underline { position: relative; text-decoration: none; transition: color 0.25s ease-out; }
-        .link-underline::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: #1d1e22; transform-origin: bottom right; transition: transform 0.25s ease-out; }
-        .link-underline:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+    <link rel="preconnect" href="https://cal-sans.com">
+    <link rel="preload" href="https://cal-sans.com/fonts/CalSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+    <title>{title}</title>
+  </head>
+  <body class={`min-h-screen flex flex-col ${isHomepage ? 'bg-black text-white' : 'bg-white text-gray-900'}`} data-page-theme={isHomepage ? 'dark' : 'light'}>
+    <!-- Page transition overlay -->
+    <div class={`page-transition ${isHomepage ? 'dark' : ''}`} id="pageTransition"></div>
+    
+    {!isHomepage && (
+    <header class={`container-px max-w-5xl mx-auto w-full py-6 relative ${heroMode ? 'absolute top-0 left-0 right-0 z-10' : ''}`} id="navbar">
+      <nav class="flex items-center justify-between">
+        <a href="/" class={`font-display text-lg lowercase transition-colors duration-300 clean-underline font-normal ${isHomepage ? 'text-white' : 'text-gray-900'}`}>angus quigley</a>
+        
+        <!-- Desktop Navigation -->
+        <ul class="hidden md:flex gap-6 text-sm font-display">
+          <li><a href="/portfolio" class={`clean-underline transition-colors duration-300 ${isHomepage ? 'text-white' : 'text-gray-500 hover:text-gray-700'}`}>portfolio</a></li>
+          <li><a href="/about" class={`clean-underline transition-colors duration-300 ${isHomepage ? 'text-white' : 'text-gray-500 hover:text-gray-700'}`}>about</a></li>
+          <li><a href="/contact" class={`clean-underline transition-colors duration-300 ${isHomepage ? 'text-white' : 'text-gray-500 hover:text-gray-700'}`}>contact</a></li>
+        </ul>
+        
+        <!-- Mobile Hamburger Menu -->
+        <button class="md:hidden flex flex-col gap-1 p-3 relative z-50" id="mobile-menu-btn" aria-label="Toggle menu">
+          <span class={`w-5 h-0.5 transition-all duration-300 ${isHomepage ? 'bg-white' : 'bg-gray-900'}`} id="burger-line-1"></span>
+          <span class={`w-5 h-0.5 transition-all duration-300 ${isHomepage ? 'bg-white' : 'bg-gray-900'}`} id="burger-line-2"></span>
+          <span class={`w-5 h-0.5 transition-all duration-300 ${isHomepage ? 'bg-white' : 'bg-gray-900'}`} id="burger-line-3"></span>
+        </button>
+        
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden fixed top-0 left-0 right-0 bottom-0 bg-white z-40 opacity-0 transition-opacity duration-300" id="mobile-menu">
+          <div class="pt-20 h-full flex flex-col justify-center transform translate-y-4 transition-transform duration-300" id="mobile-menu-content">
+            <ul class="flex flex-col text-center text-2xl font-display">
+              <li><a href="/portfolio" class="text-gray-900 hover:text-gray-600 transition-colors duration-300 block py-8">portfolio</a></li>
+              <li><a href="/about" class="text-gray-900 hover:text-gray-600 transition-colors duration-300 block py-8">about</a></li>
+              <li><a href="/contact" class="text-gray-900 hover:text-gray-600 transition-colors duration-300 block py-8">contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    )}
 
-        .link-underline-white { position: relative; text-decoration: none; transition: color 0.25s ease-out; }
-        .link-underline-white::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 1px; bottom: -2px; left: 0; background-color: white; transform-origin: bottom right; transition: transform 0.25s ease-out; }
-        .link-underline-white:hover::after { transform: scaleX(1); transform-origin: bottom left; }
-
-        /* General fade-in for single content blocks */
-        .fade-in-on-load {
-            animation: fadeInAnimation 1s ease-out forwards;
-        }
-        @keyframes fadeInAnimation {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* NEW: Staggered fade-in for list items */
-        @keyframes staggerFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .stagger-item {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: staggerFadeIn 0.5s ease-out forwards;
-        }
-        /* Apply a different delay to the first 8 items in a list */
-        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
-        .stagger-item:nth-child(2) { animation-delay: 0.2s; }
-        .stagger-item:nth-child(3) { animation-delay: 0.3s; }
-        .stagger-item:nth-child(4) { animation-delay: 0.4s; }
-        .stagger-item:nth-child(5) { animation-delay: 0.5s; }
-        .stagger-item:nth-child(6) { animation-delay: 0.6s; }
-        .stagger-item:nth-child(7) { animation-delay: 0.7s; }
-        .stagger-item:nth-child(8) { animation-delay: 0.8s; }
-    </style>
-</head>
-<body class="antialiased">
-    <Header />
-    <main>
-        <slot />
+    <main class={`flex-1 w-full ${heroMode ? '' : 'container-px max-w-5xl mx-auto pt-8'}`}>
+      <slot />
     </main>
-    <Footer />
-</body>
+
+    {!isHomepage && <Footer />}
+
+    <script>
+      // Page transition system
+      function initPageTransitions() {
+        const links = document.querySelectorAll('a[href^="/"]');
+        const transition = document.getElementById('pageTransition');
+        const currentTheme = document.body.getAttribute('data-page-theme');
+        
+        if (!transition) return;
+        
+        links.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            
+            if (!href) return;
+            
+            // Determine target theme
+            const isGoingToHome = href === '/';
+            const targetTheme = isGoingToHome ? 'dark' : 'light';
+            
+            // Only show transition if changing themes
+            if (currentTheme !== targetTheme) {
+              // Mark navigation direction for animations
+              if (isGoingToHome) {
+                sessionStorage.setItem('toIndex', 'true');
+              } else {
+                sessionStorage.setItem('fromIndex', 'true');
+              }
+              
+              // Set transition overlay to target theme color
+              if (targetTheme === 'dark') {
+                transition.classList.add('dark');
+              } else {
+                transition.classList.remove('dark');
+              }
+              
+              transition.classList.add('active');
+              
+              setTimeout(() => {
+                window.location.href = href;
+              }, 200);
+            } else {
+              // Same theme - navigate immediately without transition
+              window.location.href = href;
+            }
+          });
+        });
+      }
+      
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', initPageTransitions);
+      
+      // Mobile menu functionality
+      function initMobileMenu() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const burgerLine1 = document.getElementById('burger-line-1');
+        const burgerLine2 = document.getElementById('burger-line-2');
+        const burgerLine3 = document.getElementById('burger-line-3');
+        
+        if (!mobileMenuBtn || !mobileMenu) return;
+        
+        let isOpen = false;
+        
+        mobileMenuBtn.addEventListener('click', () => {
+          isOpen = !isOpen;
+          
+          if (isOpen) {
+            // Show menu
+            mobileMenu.classList.remove('hidden');
+            const mobileMenuContent = document.getElementById('mobile-menu-content');
+            
+            // Trigger animation after a small delay to ensure display is set
+            setTimeout(() => {
+              mobileMenu.classList.remove('opacity-0');
+              mobileMenu.classList.add('opacity-100');
+              if (mobileMenuContent) {
+                mobileMenuContent.classList.remove('translate-y-4');
+                mobileMenuContent.classList.add('translate-y-0');
+              }
+            }, 10);
+            
+            // Animate to X
+            if (burgerLine1) {
+              burgerLine1.style.transform = 'rotate(45deg) translate(3px, 3px)';
+            }
+            if (burgerLine2) {
+              burgerLine2.style.opacity = '0';
+            }
+            if (burgerLine3) {
+              burgerLine3.style.transform = 'rotate(-45deg) translate(3px, -3px)';
+            }
+          } else {
+            // Hide menu with animation
+            const mobileMenuContent = document.getElementById('mobile-menu-content');
+            mobileMenu.classList.remove('opacity-100');
+            mobileMenu.classList.add('opacity-0');
+            if (mobileMenuContent) {
+              mobileMenuContent.classList.remove('translate-y-0');
+              mobileMenuContent.classList.add('translate-y-4');
+            }
+            
+            // Hide menu after animation completes
+            setTimeout(() => {
+              mobileMenu.classList.add('hidden');
+            }, 300);
+            
+            // Animate back to hamburger
+            if (burgerLine1) {
+              burgerLine1.style.transform = '';
+            }
+            if (burgerLine2) {
+              burgerLine2.style.opacity = '1';
+            }
+            if (burgerLine3) {
+              burgerLine3.style.transform = '';
+            }
+          }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (isOpen && !mobileMenuBtn.contains(e.target as Node) && !mobileMenu.contains(e.target as Node)) {
+            mobileMenuBtn.click();
+          }
+        });
+      }
+      
+      // Initialize mobile menu
+      document.addEventListener('DOMContentLoaded', initMobileMenu);
+      
+      // Handle navbar fade-in animation
+      function handleNavbarFadeIn() {
+        const navbar = document.getElementById('navbar');
+        
+        if (navbar && sessionStorage.getItem('fromIndex') === 'true') {
+          // Clear the flag immediately
+          sessionStorage.removeItem('fromIndex');
+          
+          // Force navbar to start hidden
+          navbar.style.opacity = '0';
+          navbar.style.transform = 'translateY(-10px)';
+          navbar.style.transition = 'none';
+          
+          // Use requestAnimationFrame to ensure DOM is ready
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              navbar.style.transition = '';
+              navbar.classList.add('navbar-fade-in');
+            });
+          });
+        }
+      }
+      
+      // Try on both DOMContentLoaded and load events for reliability
+      document.addEventListener('DOMContentLoaded', handleNavbarFadeIn);
+      
+      // Fade out transition overlay on page load
+      window.addEventListener('load', () => {
+        const transition = document.getElementById('pageTransition');
+        
+        if (transition) {
+          setTimeout(() => {
+            transition.classList.remove('active');
+          }, 50);
+        }
+        
+        // Fallback: try navbar animation again on load if it didn't work on DOMContentLoaded
+        handleNavbarFadeIn();
+      });
+    </script>
+  </body>
 </html>

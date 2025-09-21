@@ -1,0 +1,31 @@
+/* Roboto from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Cal Sans from Cal.com official CDN */
+@import url('https://cal-sans.com/cal-sans.css');
+
+/* Backup Cal Sans from GitHub */
+@font-face {
+  font-family: 'Cal Sans';
+  src: url('https://github.com/calcom/font/raw/main/fonts/CalSans-SemiBold.woff2') format('woff2'),
+       url('https://github.com/calcom/font/raw/main/fonts/CalSans-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Apply fonts explicitly */
+body { 
+  font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; 
+}
+
+h1, h2, h3, h4, h5, h6, .font-display { 
+  font-family: 'Cal Sans', 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-weight: 600;
+}
+
+/* Force Cal Sans on display elements */
+.font-display {
+  font-family: 'Cal Sans', 'Roboto', system-ui !important;
+  font-weight: 600 !important;
+}
